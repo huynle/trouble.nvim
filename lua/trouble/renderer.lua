@@ -128,8 +128,12 @@ function renderer.render_diagnostics(view, text, items)
 
     local sign_hl = diag.sign_hl or ("TroubleSign" .. diag.type)
 
-    text:render(indent, "Indent")
-    text:render(sign .. "  ", sign_hl, { exact = true })
+    if config.options.indent_lines then
+      text:render(indent, "Indent")
+    end
+    if sign ~= "" then
+      text:render(sign .. "  ", sign_hl, { exact = true })
+    end
     text:render(diag.text, "Text" .. diag.type, " ")
     -- text:render(diag.type, diag.type, " ")
 
