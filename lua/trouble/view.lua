@@ -371,7 +371,18 @@ end
 
 function View:current_item()
   local line = self:get_line()
-  local item = self.items[line]
+  local text = vim.api.nvim_buf_get_lines(self.buf, line - 1, line, false)[1]
+  local mapped_line = line
+  for idx, item in pairs(self.items) do
+    if text then
+      local escaped_search_string = string.gsub(item["text"], "[%(%)%.%+%-%*%?%[%]%^%$%%]", "%%%1")
+      if string.match(text, escaped_search_string) then
+        mapped_line = idx
+        break
+      end
+    end
+  end
+  local item = self.items[mapped_line]
   return item
 end
 
